@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Website</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="svgContainer"></div>
+
+  <form id="notification" class="closed">
+    <div id="notificationContent">
+      <p id="notificationText">БОГАТЬЩИНА</p>
+      <img src="bear.png" alt="Bear Image" id="bearImage">
+      <div id="descriptionContainer">
+        <p id="descriptionText">Глубоко в сердце герцогства Мархийского раскинулась столица Мархии Богатьщины, замысловатый город, окруженный высокими стенами и построенный в средневековом стиле. Стена, украшенная старинными башнями, охраняет его от внешних угроз и создает ощущение неприступности и силы.</p>
+        <p><span class="descriptionTextContinued">Старинные улочки, изогнутые и живописные, уводят вас в удивительное путешествие во времени. Дома, построенные из камня и дерева, так словно свидетельствуют о давних временах и бережно хранят историю Мархии Богатьщины.</span></p>
+        <p class="descriptionTextContinued" id="descriptionContinuedText">В центре города возвышается дворец герцогов, построенный из камня и окруженный прекрасными садами. Величественные колонны и изящные арки создают великолепную атмосферу благородства и власти.</p>
+      </div>
+      <img src="town1.png" alt="Town Image" id="townImage">
+    </div>
+    <div id="notificationOverlay"></div>
+  </form>
+
+  <script>
+    const svgContainer = document.getElementById('svgContainer');
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'map4.svg', true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        svgContainer.innerHTML = xhr.responseText;
+        highlightObject('bogat');
+      }
+    };
+    xhr.send();
+
+    function highlightObject(objectId) {
+      const object = document.getElementById(objectId);
+      object.addEventListener('mouseover', function() {
+        object.classList.add('highlight');
+      });
+      object.addEventListener('mouseout', function() {
+        object.classList.remove('highlight');
+      });
+      object.addEventListener('click', function(event) {
+        event.stopPropagation();
+        openNotification();
+      });
+    }
+
+    function openNotification() {
+      const notification = document.getElementById('notification');
+      if (notification) {
+        notification.classList.add('open');
+        setTimeout(function() {
+          notification.classList.remove('closed');
+        }, 0);
+      }
+    }
+
+    document.addEventListener('click', function(event) {
+      const notification = document.getElementById('notification');
+      if (notification && notification.classList.contains('open') && !notification.contains(event.target)) {
+        closeNotification();
+      }
+    });
+
+    function closeNotification() {
+      const notification = document.getElementById('notification');
+      if (notification) {
+        notification.classList.add('closed');
+        setTimeout(function() {
+          notification.classList.remove('open');
+        }, 800);
+      }
+    }
+  </script>
+</body>
+</html>
